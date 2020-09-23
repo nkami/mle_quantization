@@ -54,15 +54,11 @@ def test_model(model: nn.Module, data_loader: DataLoader, device: torch.device, 
         quantize_model(model, w_bits, a_bits)
     model.eval()
     accuracies = []
-    early = 0
     for x, y in tqdm(data_loader):
-        early += 1
         x, y = x.to(device), y.to(device)
         probs = model(x)
         preds = torch.argmax(probs, dim=1)
         accuracies.append(torch.sum(preds + 1 == y).item() / y.shape[0])
-        if early >= (50 / 1):
-            break
     return sum(accuracies) / len(accuracies)
 
 
